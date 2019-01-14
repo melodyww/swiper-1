@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 
 
@@ -16,3 +18,19 @@ class User(models.Model):
     birth_day = models.IntegerField(default=1, verbose_name='出生日')
     avatar = models.CharField(max_length=256, verbose_name='个人形象的URL')
     location = models.CharField(max_length=16, verbose_name='常居地')
+
+    @property
+    def age(self):
+        today = datetime.date.today()
+        birth_date = datetime.date(self.birth_year, self.birth_month, self.birth_day)
+        return (today - birth_date).days // 365
+
+    def to_dict(self):
+        return {
+            'phonenum': self.phonenum,
+            'nickname': self.nickname,
+            'sex': self.sex,
+            'age': self.age,
+            'avatar': self.avatar,
+            'location': self.location,
+        }

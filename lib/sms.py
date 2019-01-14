@@ -1,7 +1,9 @@
 from random import randrange
 
 import requests
+from django.core.cache import cache
 
+from common import keys
 from swiper import config
 
 
@@ -16,7 +18,13 @@ def send_sms(phonenum):
     '''发送手机验证码'''
     params = config.YZX_SMS_PARAMS.copy()
     params['mobile'] = phonenum
-    params['param'] = gen_vcode()
+
+    # 创建验证码，并添加到缓存
+    vcode = gen_vcode()
+    params['param'] = vcode
+    print('----------->', vcode)
+    cache.set(keys.VCODE_KEY % phonenum, vcode, 180)
+
     resp = requests.post(config.YZX_SMS_API, json=params)
     if resp.status_code == 200:
         result = resp.json()
