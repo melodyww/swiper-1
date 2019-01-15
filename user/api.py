@@ -21,7 +21,6 @@ def submit_vcode(request):
 
     cache_vcode = cache.get(keys.VCODE_KEY % phone)
 
-    print(vcode, cache_vcode)
     if vcode == cache_vcode:
         # 执行登录过程
         user, _ = User.objects.get_or_create(phonenum=phone, nickname=phone)
@@ -36,7 +35,9 @@ def submit_vcode(request):
 
 def get_profile(request):
     '''获取个人资料'''
-    return JsonResponse({'code': 0, 'data': None})
+    uid = request.session['uid']
+    user = User.objects.get(id=uid)
+    return render_json(user.profile.to_dict())
 
 
 def set_profile(request):

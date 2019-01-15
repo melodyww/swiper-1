@@ -22,7 +22,6 @@ def send_sms(phonenum):
     # 创建验证码，并添加到缓存
     vcode = gen_vcode()
     params['param'] = vcode
-    print('----------->', vcode)
     cache.set(keys.VCODE_KEY % phonenum, vcode, 180)
 
     resp = requests.post(config.YZX_SMS_API, json=params)
