@@ -1,11 +1,15 @@
+from urllib.parse import urljoin
 from django.core.cache import cache
 
+from swiper import config
 from lib.http import render_json
 from lib.sms import send_sms
+from lib.qncloud import upload_to_qiniu
 from common import keys
 from common import errors
 from user.models import User
 from user.forms import ProfileForm
+
 
 
 def submit_phone(request):
@@ -55,4 +59,13 @@ def set_profile(request):
 
 def upload_avatar(request):
     '''头像上传'''
-    return
+    uid = request.session['uid']
+    user = User.objects.get(id=uid)
+    avatar = request.FILES.get('avatar')  # 取出文件对象
+
+    filepath, filename = save_upload_avatar(uid, avatar)  # 保存到本地
+    upload_to_qiniu(filepath, filename)  # 保存到七牛
+    avatar_url = urljoin(config.QN_URL_PREFIX, filename)
+    user.avatar = avatar_url
+    user.save()
+    return render_json(None)
