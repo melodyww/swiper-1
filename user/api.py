@@ -1,21 +1,18 @@
-from urllib.parse import urljoin
 from django.core.cache import cache
 
-from swiper import config
 from lib.http import render_json
-from lib.sms import send_sms
-from lib.qncloud import upload_to_qiniu
+from lib.sms import send_vcode
 from common import keys
 from common import errors
 from user.models import User
 from user.forms import ProfileForm
-
+from user import logics
 
 
 def submit_phone(request):
     '''提交手机号，发送验证码'''
     phone = request.POST.get('phone')
-    send_sms(phone)
+    send_vcode(phone)
     return render_json(None)
 
 
@@ -63,9 +60,5 @@ def upload_avatar(request):
     user = User.objects.get(id=uid)
     avatar = request.FILES.get('avatar')  # 取出文件对象
 
-    filepath, filename = save_upload_avatar(uid, avatar)  # 保存到本地
-    upload_to_qiniu(filepath, filename)  # 保存到七牛
-    avatar_url = urljoin(config.QN_URL_PREFIX, filename)
-    user.avatar = avatar_url
-    user.save()
+    logics.upload_avatar.delay(user, avatar)
     return render_json(None)
