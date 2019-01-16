@@ -37,8 +37,7 @@ def submit_vcode(request):
 
 def get_profile(request):
     '''获取个人资料'''
-    uid = request.session['uid']
-    user = User.objects.get(id=uid)
+    user = request.user
     return render_json(user.profile.to_dict())
 
 
@@ -56,8 +55,7 @@ def set_profile(request):
 
 def upload_avatar(request):
     '''头像上传'''
-    uid = request.session['uid']
-    user = User.objects.get(id=uid)
+    user = request.user
     avatar = request.FILES.get('avatar')  # 取出文件对象
 
     logics.upload_avatar.delay(user, avatar)
