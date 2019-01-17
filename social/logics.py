@@ -3,6 +3,7 @@ import datetime
 from django.core.cache import cache
 
 from swiper import config
+from common import errors
 from user.models import User
 from social.models import Swiped
 from social.models import Friend
@@ -64,7 +65,7 @@ def superlike(user, sid):
 
 def rewind(user):
     '''
-    每天允许撤销 10 次
+    每天允许撤销 3 次
     '''
     # 获取当前日期已撤销的次数
     now = datetime.datetime.now()
@@ -83,6 +84,5 @@ def rewind(user):
         # 撤销好友记录
         Friend.break_off(user.id, record.sid)
         record.delete()
-        return True
     else:
-        return False  # TODO: 返回错误码
+        raise errors.RewindLimited('反悔次数达到每日上限')

@@ -32,7 +32,7 @@ def submit_vcode(request):
 
         return render_json(user.to_dict())
     else:
-        return render_json('验证码错误', errors.VCODE_ERR)
+        raise errors.VcodeErr('验证码错误')
 
 
 def get_profile(request):
@@ -50,7 +50,7 @@ def set_profile(request):
         profile.save()
         return render_json(None)
     else:
-        return render_json(form.errors, errors.PROFILE_ERR)
+        raise errors.ProfileErr(form.errors)
 
 
 def upload_avatar(request):

@@ -36,9 +36,10 @@ def rewind(request):
 
     客户端传来的东西都是不可信的，所有参数都要经过检查, 能不依赖客户端参数时尽量不依赖
     '''
-    result = logics.rewind(request.user)
-    return render_json({'rewinded': result})
+    logics.rewind(request.user)
+    return render_json(None)
 
 
 def show_liked_me(request):
+
     return render_json(None)
