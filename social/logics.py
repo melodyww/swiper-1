@@ -86,3 +86,9 @@ def rewind(user):
         record.delete()
     else:
         raise errors.RewindLimited('反悔次数达到每日上限')
+
+
+def get_users_liked_me(user):
+    '''获取喜欢过我的用户列表'''
+    uid_list = Swiped.liked_me(user.id)
+    return User.objects.filter(id__in=uid_list)

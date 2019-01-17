@@ -25,6 +25,14 @@ class Swiped(models.Model):
         return cls.objects.filter(uid=uid, sid=sid,
                                   flag__in=['like', 'superlike']).exists()
 
+    @classmethod
+    def liked_me(cls, uid):
+        uid_list = []
+        swiped = cls.objects.filter(sid=uid, flag__in=['like', 'superlike']).only('uid')
+        for swp in swiped:
+            uid_list.append(swp.uid)
+        return uid_list
+
 
 class Friend(models.Model):
     '''好友关系表'''
