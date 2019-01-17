@@ -22,6 +22,8 @@ class User(models.Model):
     avatar = models.CharField(max_length=256, verbose_name='个人形象的URL')
     location = models.CharField(max_length=16, verbose_name='常居地')
 
+    vip_id = models.IntegerField(default=1)
+
     @property
     def age(self):
         today = datetime.date.today()
