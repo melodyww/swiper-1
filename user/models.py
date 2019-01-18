@@ -4,6 +4,7 @@ from django.db import models
 
 from lib.orm import ModelMixin
 from social.models import Friend
+from vip.models import Vip
 
 
 class User(models.Model):
@@ -36,6 +37,13 @@ class User(models.Model):
         if not hasattr(self, '_profile'):
             self._profile, _ = Profile.objects.get_or_create(id=self.id)
         return self._profile
+
+    @property
+    def vip(self):
+        '''用户对应的 VIP'''
+        if not hasattr(self, '_vip'):
+            self._vip = Vip.objects.get(id=self.vip_id)
+        return self._vip
 
     @property
     def friends(self):
