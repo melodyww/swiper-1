@@ -1,4 +1,7 @@
+from lib.cache import rds
 from lib.http import render_json
+from common import keys
+from swiper import config
 from social import logics
 from social.models import Swiped
 from vip.logics import need_perm
@@ -14,6 +17,7 @@ def like(request):
     '''喜欢'''
     sid = int(request.POST.get('sid'))
     matched = logics.like(request.user, sid)
+    rds.zincrby(keys.HOT_RANK, sid, config.SCORE_LIKE)
     return render_json({'is_matched': matched})
 
 
@@ -22,6 +26,7 @@ def superlike(request):
     '''超级喜欢'''
     sid = int(request.POST.get('sid'))
     matched = logics.superlike(request.user, sid)
+    rds.zincrby(keys.HOT_RANK, sid, config.SCORE_SUPERLIKE)
     return render_json({'is_matched': matched})
 
 
@@ -29,6 +34,7 @@ def dislike(request):
     '''不喜欢'''
     sid = int(request.POST.get('sid'))
     Swiped.swipe('dislike', request.user.id, sid)
+    rds.zincrby(keys.HOT_RANK, sid, config.SCORE_DISLIKE)
     return render_json(None)
 
 
@@ -62,10 +68,11 @@ def hot_users(request):
     全服最火的 10 名用户
 
     Return: {
-            '1': {id: 123, nickname: abc, ...}
+            '1': {id: 123, nickname: abc, ..., score: 1000}
             '2': {...}
             '3': {...}
             ...
         }
     '''
-    pass
+    rank_data = logics.get_top_n(10)
+    return render_json(rank_data)

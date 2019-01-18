@@ -1,6 +1,11 @@
-'''第三方平台的配置'''
+'''业务配置以及第三方平台的配置'''
 
-REWIND_TIMES = 3
+REWIND_TIMES = 3  # 每日反悔次数
+
+# 滑动积分配置
+SCORE_LIKE = 5       # 右滑积分
+SCORE_DISLIKE = -5   # 左滑积分
+SCORE_SUPERLIKE = 7  # 上滑积分
 
 
 # 云资讯短信平台配置
