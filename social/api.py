@@ -55,3 +55,17 @@ def friends(request):
     my_friends = request.user.friends
     data = [friend.to_dict() for friend in my_friends]
     return render_json(data)
+
+
+def hot_users(request):
+    '''
+    全服最火的 10 名用户
+
+    Return: {
+            '1': {id: 123, nickname: abc, ...}
+            '2': {...}
+            '3': {...}
+            ...
+        }
+    '''
+    pass

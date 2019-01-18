@@ -68,6 +68,21 @@ TEMPLATES = [
 WSGI_APPLICATION = 'swiper.wsgi.application'
 
 
+# redis 配置
+REDIS = {
+    'Master': {
+        'host': '127.0.0.1',
+        'port': 6379,
+        'db': 13,
+    },
+    'Slave': {
+        'host': '127.0.0.1',
+        'port': 6379,
+        'db': 13,
+    }
+}
+
+
 # 缓存配置
 CACHES = {
     "default": {
