@@ -20,7 +20,7 @@ class AuthMiddleware(MiddlewareMixin):
         uid = request.session.get('uid')
         if uid:
             try:
-                request.user = User.objects.get(id=uid)
+                request.user = User.get(id=uid)
             except User.DoesNotExist:
                 return render_json('用户不存在', errors.UserNotExist.code)
         else:

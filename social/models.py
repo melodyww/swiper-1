@@ -44,7 +44,7 @@ class Friend(models.Model):
         '''创建好友关系'''
         # 为了防止重复添加对 uid 排序
         uid1, uid2 = (uid2, uid1) if uid1 > uid2 else (uid1, uid2)
-        return cls.objects.get_or_create(uid1=uid1, uid2=uid2)
+        return cls.get_or_create(uid1=uid1, uid2=uid2)
 
     @classmethod
     def friends_id_list(cls, uid):

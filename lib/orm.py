@@ -23,7 +23,7 @@ def get(cls, *args, **kwargs):
             return model_obj
 
     # 从数据库获取 model 对象
-    model_obj = cls.objects.get(*args, **kwargs)
+    model_obj = cls.get(*args, **kwargs)
 
     # 将取出的对象写入缓存
     cache.set(key, model_obj, 86400 * 14)
@@ -42,7 +42,7 @@ def get_or_create(cls, *args, **kwargs):
             return model_obj
 
     # 从数据库获取或创建 model 对象
-    model_obj = cls.objects.get_or_create(*args, **kwargs)
+    model_obj = cls.get_or_create(*args, **kwargs)
 
     # 将取出的对象写入缓存
     cache.set(key, model_obj, 86400 * 14)

@@ -25,7 +25,7 @@ def submit_vcode(request):
 
     if vcode == cache_vcode:
         # 执行登录过程
-        user, _ = User.objects.get_or_create(phonenum=phone, nickname=phone)
+        user, _ = User.get_or_create(phonenum=phone, nickname=phone)
 
         # 在 session 中记录登录状态
         request.session['uid'] = user.id
