@@ -1,3 +1,5 @@
+import logging
+
 from django.core.cache import cache
 
 from lib.http import render_json
@@ -7,6 +9,8 @@ from common import errors
 from user.models import User
 from user.forms import ProfileForm
 from user import logics
+
+inf_log = logging.getLogger('inf')
 
 
 def submit_phone(request):
@@ -29,6 +33,7 @@ def submit_vcode(request):
 
         # 在 session 中记录登录状态
         request.session['uid'] = user.id
+        inf_log.info(f'login {user.id}')  # 日志记录
 
         return render_json(user.to_dict())
     else:

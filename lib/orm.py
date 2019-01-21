@@ -23,9 +23,10 @@ def get(cls, *args, **kwargs):
             return model_obj
 
     # 从数据库获取 model 对象
-    model_obj = cls.get(*args, **kwargs)
+    model_obj = cls.objects.get(*args, **kwargs)
 
     # 将取出的对象写入缓存
+    key = 'Model-%s-%s' % (cls.__name__, model_obj.pk)
     cache.set(key, model_obj, 86400 * 14)
 
     return model_obj
@@ -42,12 +43,13 @@ def get_or_create(cls, *args, **kwargs):
             return model_obj
 
     # 从数据库获取或创建 model 对象
-    model_obj = cls.get_or_create(*args, **kwargs)
+    model_obj, created = cls.objects.get_or_create(*args, **kwargs)
 
     # 将取出的对象写入缓存
+    key = 'Model-%s-%s' % (cls.__name__, model_obj.pk)
     cache.set(key, model_obj, 86400 * 14)
 
-    return model_obj
+    return model_obj, created
 
 
 def save(self, force_insert=False, force_update=False, using=None,
