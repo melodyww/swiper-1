@@ -38,7 +38,18 @@ def submit_vcode(request):
 def get_profile(request):
     '''获取个人资料'''
     user = request.user
-    return render_json(user.profile.to_dict())
+    key = 'ProfileDict-%s' % user.id
+    # 先从缓存获取
+    profile_dict = cache.get(key)
+    print('get from cache: %s' % profile_dict)
+    if profile_dict is None:
+        # 如果缓存中没有，从数据库中获取
+        profile_dict = user.profile.to_dict()
+        print('get from db: %s' % profile_dict)
+        # 将数据库中的数据添加到缓存
+        cache.set(key, profile_dict, 86400 * 7)
+        print('set to cache')
+    return render_json(profile_dict)
 
 
 def set_profile(request):
@@ -48,6 +59,12 @@ def set_profile(request):
         profile = form.save(commit=False)
         profile.id = request.session['uid']
         profile.save()
+
+        # 更新缓存
+        print('update cache')
+        key = 'ProfileDict-%s' % profile.id
+        cache.set(key, profile.to_dict(), 86400 * 7)
+
         return render_json(None)
     else:
         raise errors.ProfileErr(form.errors)

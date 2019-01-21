@@ -67,6 +67,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'swiper.wsgi.application'
 
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 
 # redis 配置
 REDIS = {
