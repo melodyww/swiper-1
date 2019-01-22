@@ -28,7 +28,7 @@ class AuthMiddleware(MiddlewareMixin):
             except User.DoesNotExist:
                 return render_json('用户不存在', errors.UserNotExist.code)
         else:
-            return render_json('用户未登录', errors.LogicError.code)
+            return render_json('用户未登录', errors.LoginRequired.code)
 
 
 class LogicErrMiddleware(MiddlewareMixin):
